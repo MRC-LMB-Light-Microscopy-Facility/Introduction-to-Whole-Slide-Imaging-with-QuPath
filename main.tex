@@ -1,180 +1,540 @@
-\documentclass[a4paper,12pt]{article}
-\usepackage[margin=1in]{geometry}
+\documentclass[a4paper,DIV=17,dvipsnames,headsepline]{scrartcl}
+\usepackage[utf8]{inputenc}
+% \usepackage[margin=1in]{geometry}
 \usepackage{graphicx}    % For including images
 \usepackage{hyperref}    % For hyperlinks
-\usepackage{amsmath}     % For mathematical symbols if needed
-\usepackage{enumitem}    % For custom list styles
+\hypersetup{
+    colorlinks=true,
+    linkcolor=MidnightBlue,
+    filecolor=magenta,      
+    urlcolor=MidnightBlue,
+    pdftitle={QuPath training},
+    pdfpagemode=FullScreen,
+    }
 \usepackage{xcolor}      % For colored text (e.g., to highlight commands)
-\usepackage{fancyhdr}    % For custom headers and footers
-\usepackage{menukeys} 
-\pagestyle{fancy}
+\usepackage{menukeys}   % forkeys and menu
+\usepackage{listings}   % for code
+\usepackage{lmodern}    % the font
+\renewcommand{\familydefault}{\sfdefault}  % sans serif fonts
+\usepackage{booktabs}   % nicer table
+\pagestyle{headings}     % use srartcl headings style
 
-% Customize the header and footer
-\fancyhead[L]{QuPath Training Course}
-\fancyhead[R]{\thepage}
-\fancyfoot[C]{\today}
+\usepackage{enotez}      % create end notes with the solutions
+\setenotez{backref=true}
 
 % Custom commands for emphasis
 \newcommand{\command}[1]{\texttt{\textbf{#1}}}
 \newcommand{\showsolutions}{\long\def\soln ##1\solnend{##1}}
 \newcommand{\nosolutions}{\long\def\soln##1\solnend{}}
-
 \showsolutions
 
 \begin{document}
 
-\title{QuPath Training Course Materials}
-\author{Qimeng Wu}
-\date{\today}
+\title{QuPath Training\\Practical session}
+
+\author{Qimeng Wu, Jerome Boulanger}
+\date{February 24th, 2025}
 
 \maketitle
+
 \tableofcontents
+
+%\section{Introduction}
+
+%QuPath is open source software for bioimage analysis. QuPath is often used for digital pathology applications because it offers a powerful set of tools for working with whole slide images, but it can be applied to lots of other kinds of image as well.
+
+%\paragraph{Key Features}
+%\begin{itemize}
+    %\item Easy and powerful image visualization, annotation, and quantification
+    %\item Multi-format image support through Bio-Formats and OpenSlide (e.g., \texttt{.vsi}, \texttt{.czi}).
+    %\item Built-in algorithms for common tasks, including cell and tissue detection
+    %\item Machine learning integration for classification tasks.
+    %\item Batch processing possibility
+    %\item Extension addition: ImageJ, CellPose, Stardist, SAM, InstaSEG (beyond the scope of this course)
+    %\item Groovy scripting for customization and deeper data interrogation (should we add this?)
+%\end{itemize}
+
+%\paragraph{Installation}
+%https://qupath.github.io 
+
 \newpage
 
-
-\section{Introduction to QuPath}
-%QuPath is an open-source software platform designed for whole slide image analysis and bioimage informatics. It supports bright-field and fluorescence imaging workflows, with powerful tools for tissue segmentation, cell detection, and quantitative analysis.
-
-QuPath is open source software for bioimage analysis. QuPath is often used for digital pathology applications because it offers a powerful set of tools for working with whole slide images, but it can be applied to lots of other kinds of image as well. 
-
-\subsection{Key Features}
-\begin{itemize}
-    \item Easy and powerful image visualization, annotation, and quantification
-    \item Multi-format image support through Bio-Formats and OpenSlide (e.g., \texttt{.vsi}, \texttt{.czi}).
-    \item Built-in algorithms for common tasks, including cell and tissue detection
-    \item Machine learning integration for classification tasks.
-    \item Batch processing possibility
-    \item Extension addition: ImageJ, CellPose, Stardist, SAM, InstaSEG (beyond the scope of this course)
-    \item Groovy scripting for customization and deeper data interrogation (should we add this?)
-\end{itemize}
-
-\subsection{Installation}
-https://qupath.github.io
-
 \section{Basic Operations in QuPath}
-\subsection{ Opening images and viewing properties}
-\begin{enumerate}
-        \item[2.1.1] \soln Use \menu{File > Open} or directly drag images of interest into QuPath. \solnend 
-        Select the right image type or let QuPath figure it our itself.
-       \item[2.1.2] \soln Use \menu {Create Project} \solnend (get into this habit at early stage to better manage multiple images); create an empty folder beforehand of the project; drag images in or \soln use \menu {Add image} \solnend and select multiple images at once.
-       \item[2.1.3] Use the mouse wheel to zoom in and out. In the bottom right corner, the pixel information is illustrated. 
-       \item[2.1.4] Drag the image around or use the overview image in the top right corner for navigation (arrow keys too)
-       \item[2.1.5] \soln Use \menu {Image} in the left panel to view the meta data of the image. \solnend 
-       \item[2.1.6] View magnification in the top panel and the icon next to is to lock the image as it is. Type numbers to go through the channel and double click to change the image type if QuPath gets it wrong. 
-       \item[2.1.7] \soln Use \menu {ctrl/cmd +L} \solnend to search for the functions. Tips: Hovering the icon, it will tell you its use.
-       %\item[2.1.8] clock icon  preference to customize the functions a bit / second icon move around the image or the annotation.
-\end{enumerate}
+\subsection{Installation}
+\href{https://qupath.github.io}{Installation link}.
+
+\subsection{Opening images and viewing properties}
+\begin{itemize} 
+    \item Use \menu{File > Open} or directly drag-and-drop images of interest into QuPath. 
+    Select the right image type or let QuPath figure it out itself.
+    \item Use \menu {Project >Create Project} and open an empty folder or drag and drop the empty folder into the QuPath interface. 
+    \item Tp populate the project using a drag-and-drop with selected images or use \menu{Add image} and select multiple images.
+    \item Use the mouse wheel to zoom in and out. At the bottom right corner, the pixel information is illustrated. 
+    \item Drag the image around or use the overview image at the top right corner for navigation. 
+    \item Use the \menu {Image} tab in the "Analysis panel" to view the metadata of the image. 
+    \item Double click to change the image type if QuPath gets it wrong. 
+    \item Use \keys{\ctrl +L} to search for tools and functionalities. 
+    \item Hovering over icons displays their names and keyboard shortcuts.
+\end{itemize}
 
 \subsection{Annotations and Measurements}
 %Explain how to create and edit ROIs, and perform measurements.
-\begin{enumerate}
-        \item[2.2.1] Simple annotations: shift key gives square when using the \soln \menu{Rectangle}\solnend; with move tool on, we can double click inside the annotation to select or deselect it. Annotations are saved in the data folder under the project folder and can be opened by text editor; we can see the path to the images in the project. 
-       \item[2.2.2] \soln \menu{Brush + alt} \solnend with alt key goes to delete the annotation; \soln \menu{Wand +alt} \solnend can fill the hole regions inside an annotation; press \soln \menu{Shift + F} \solnend to fill annotations for better visualization. \soln \menu{Wand} \solnend takes the pixel information into account for the annotation and it is better than \soln \menu{Brush} \solnend for images with good intensity. When using  \soln \menu{Wand}\solnend, the annotations are sometimes not fine enough when zoomed in, which can be corrected with \soln \menu{Brush} \solnend; they are res adjusted; For images with poor contrast, an over annotation followed by correction from outwards usually gives better result; after annotation, press space to back to move mode
-       \item[2.2.3] In the middle top panel \soln \menu{Show / Hide} \solnend to toggle between annotation on and off. (second icon for all the non selected annotations) Double click off the selection area to de-select. 
-       \item[2.2.4] The slide bar is to change the opacity of the annotations.
-       \item[2.2.5] Undo annotation: hierarchy can be used to delete multiple annotations; draw a bigger annotation to include all the ones we want to delete.    
-       \item[2.2.6]\soln \menu{Table} \solnend icon to display the measurement result.
-       \item[note] Is the annotation here object-based or pixel based?
-\end{enumerate}
+\begin{itemize}
+    \item Press \keys{\shift} to lock certain object types to fixed relative dimensions, such as keeping the ellipse tool a circle or the rectangle tool a square. 
+    \item Press \keys{\Alt} for the tool to become an eraser. 
+    \item Press \menu{\Alt} + ``Wand'' tool to fill holes inside annotations. 
+    \item The ``Wand'' tool takes pixel information into account for creating annotations and can be more effective  than the ``Brush'' tool for some images. When using the ``Wand' tool, the annotations are sometimes not fine enough when zoomed in, which can be then corrected with the ``Brush'' tool. For images with poor contrast, an over annotation followed by correction from outwards usually gives better result.
+    \item In the middle top panel, icons to toggle between annotation/detection on and off, fill or unfill annotation/detection for better visualization. Use the slide bar to change the opacity of the annotation. With move tool on, we can double click inside the annotation to select or deselect it.
+    \item To undo annotation, press \keys{ctrl+Z} or hierarchy can be used to delete multiple annotations. Draw a larger annotation to include all the ones we want to delete.    
+    \item Annotations are saved in the data folder under the project folder and can be opened using a text editor.
+       %\item[note] Is the annotation here object-based or pixel based?
+\end{itemize}
+
+\subsection{Positive cell detection}
+The menu \menu{Analyze>Cell detection>Positive cell detection} enable to detect and classify at once cells. Cells are detected using a nuclear stain which is then enlarged. Find its parameters and their descriptions in Table \ref{tab:pos-cell-detection}.
+
+\begin{table}
+\begin{center}\scriptsize
+\begin{tabular}{p{4cm}p{10cm}} \toprule
+     Parameter & Description \\ \midrule
+     Detection image&  Nuclei can be detected on the hematoxylin stain (brightfield) or DAPI (fluorescence)\\
+     Requested pixel size & The precision of the outlines, defines the resolution QuPath will run its detection on.\\
+     Background radius& Size of the filter used background estimation from the chosen detection image. Should be a little bigger than your largest nucleus or cluster of nuclei or just set to 0 and play with threshold. \\
+     Use opening by reconstruction & Usually the detections are more accurate with this option on, consider turning it off when you have varied background, folds, etc. \\
+     Median filter radius & Applies a median smoothing filter with the chosen radius before nucleus detection. Increase the radius helps to get rid of some of the fragmentation. \\ 
+     Sigma & Applies a Gaussian smoothing filter with the chosen radius before nucleus detection.
+     \\ 
+     Minimum and Maximum area & the smallest and largest objects that can be nuclei.  \\ 
+     Threshold& The nucleus detection threshold after all background removal and smoothing filters are applied \\  
+    Maximum background intensity& Any regions with a calculated background higher than this threshold  are likely noise/artifacts/problematic and will be discarded entirely.\\
+    Split by shape& Check in almost all cases. Separates nuclei that are relatively round.\\
+    Exclude DAB (membrane staining) & Check if you know that your DAB staining is necessarily on the cell membrane and therefore anywhere that is DAB+ cannot be a nucleus. \\
+    Cell expansion& All of the nuclei outlines will be expanded outward this distance to define the cell boundaries. They will stop when they run into another cell.\\
+    Include cell nucleus& Keep the nucleus sub compartment for each cell.\\
+    Smooth boundaries& Keep this checked most of the time. It improves results while minimally affecting processing time.\\
+    Make measurements& Useful if you are going to do any further processing on the cells after detection. Slightly increases processing time and file size, but it’s almost always worth doing.\\
+    Score compartment& Tell it where in the cell you are expecting the DAB signal (only nucleus, only cytoplasm, or both), and if it should look at average or max intensity. A map of the scores can be visualized using \menu{Measure > Show measurement maps}.\\
+    Thresholds& Set the thresholds to determine 1+, 2+, 3+ cells (i.e, divide cells into negative, dim, medium, and bright).\\
+    Single threshold& With this checked, it will only use the 1+ threshold, and will only tell you positive vs negative.\\
+     \bottomrule 
+\end{tabular}
+\end{center}
+ \caption{Positive cell detection and its parameters}\label{tab:pos-cell-detection}
+\end{table}
+
+% \begin{itemize}
+%     \item Choose detection image: e.g. nuclei can be detected on the hematoxylin stain (typical).
+%     \item Requested pixel size: the precision of the outlines, defines the resolution QuPath will run its detection on.
+%     \item Background radius: size of the filter it uses for subtracting background from the chosen detection image. Should be a little bigger than your biggest nucleus or cluster of nuclei or just set to 0 and play with threshold. %Associated with the Max background intensity in brightfield images for cell removal in tissue folder, in fluorescence images this value simply acts as an attempted detection of background levels for making the nuclei easier for the algorithm to detect. I often set this to 0 for IF so that I can estimate the Threshold value based on the intensity of the pixels in the image. If you keep a background radius, you will need to experiment more with a good Threshold setting, but the results may be better if you do have a high background.
+%     The initial background calculation is from looking for every pixel in the image in a circle of a radius defined and looks for the lowest value pixel which might potentially be the background. 
+%     \item Use opening by reconstruction: usually the detections are more accurate with this option on, consider turning it off when you have varied background, folds, etc.
+%     \item Median filter radius: applies a median smoothing filter with the chosen radius before nucleus detection. Increase the Median filter sigma helps to get rid of some of the fragmentation  
+%     \item Sigma: applies a Gaussian smoothing filter with the chosen radius before nucleus detection. 
+%     \item Minimum and Maximum area: the smallest and largest objects that can be nuclei. 
+%     \item Threshold: The nucleus detection threshold after all background removal and smoothing filters are applied. 
+%     \item Maximum background intensity: Any regions with a calculated background higher than this threshold are likely noise/artifacts/problematic and will be discarded entirely. 
+%     \item Split by shape: Check in almost all cases. Separates nuclei that are relatively round.
+%     \item Exclude DAB (membrane staining): Check if you know that your DAB staining is necessarily on the cell membrane and therefore anywhere that is DAB+ cannot be a nucleus. In this example, Ki67 is found in the nucleus, so do not check this. 
+%     \item Cell expansion: All of the nuclei outlines will be expanded outward this distance to define the cell boundaries. They will stop when they run into another cell.
+%     \item Include cell nucleus: Keep this checked. 
+%     \item Smooth boundaries: Keep this checked most of the time. It improves results while minimally affecting processing time. 
+%     \item Make measurements: Useful if you are going to do any further processing on the cells after detection. Slightly increases processing time and file size, but it’s almost always worth doing. 
+%     \item Score compartment: Tell it where in the cell you are expecting the DAB signal (only nucleus, only cytoplasm, or both), and if it should look at average or max intensity. A map of the scores can be visualized using \menu{Measure > Show measurement maps}.
+%     \item Thresholds: Set the thresholds to determine 1+, 2+, 3+ cells (i.e, divide cells into negative, dim, medium, and bright). %Not needed in the current exercise.
+%     \item Single threshold: With this checked, it will only use the 1+ threshold, and will only tell you positive vs negative. Keep it unchecked for this exercise.
+% \end{itemize}
+
+\subsection{Pixel classifier}
+You can define a pixel thresholder using \menu{Classify > Pixel Classification > Create thresholder}. Find its parameters and their descriptions in Table \ref{tab:thresholder}.
+
+\begin{table}
+\begin{center}\scriptsize
+\begin{tabular}{p{2cm}p{12cm}} \toprule
+Parameter & Description \\ \midrule
+Resolution &  These values will start with ``Full'' for the base resolution ip to 64X downsample for ``Very Low''. Lower resolutions will run faster and can be useful for getting a feel for your chosen channel. \\
+Channels  & Choose the channel to Threshold on. For brightfield images I most commonly use Averaged Channels, though the stain vectors can also be useful here. Averaged channels is a measure for overall stain intensity in that it will be low where there is a lot of staining, and high where there is background. It only matters a little bit what the stain actually is, some stains like DAB absorb/scatter in all three channels and therefore will appear darker in averaged channels. \\ 
+Prefilter & Select the feature that will be thresholded. \\
+Smoothing sigma & Select the scale at which the feature is computed.\\
+Threshold & The threshold value depends on the ``Channel'' that is set. Note that RGB values range between 0 (dark) and 255 (white), stains between 0 (unstained) and 1 (stained).\\
+Above/below Threshold & Set the class for each side of the threshold. Again this depends of the ``Channel'' parameter and the image type. For brightfield: use above for stains, and below for for RGB. For fluorescence imaging, use above.\\
+Region & Define the region where to apply the pixel classifier.\\
+\bottomrule
+\end{tabular}
+\end{center}
+\caption{Pixel thresholder and its parameters.}\label{tab:thresholder}
+\end{table}
+
+
+% \begin{itemize}
+%     \item Train a pixel classifier using  \menu{Classify > Pixel Classification > Train a Pixel Classifier}. Alternatively, use  \menu{Classify > Pixel Classification > Create Thresholder}. Pixel classification has no cell information but just the total amount of PD-L1 in this sample.
+%     \item \soln \menu{Create Thresholder} \solnend window.
+%     \begin{enumerate}
+%     \item[a]Resolution: As long as your image has pixel size metadata, these values will start with Full for the base resolution to 64X downsample for ``Very Low''. Lower resolutions will run faster and can be useful for getting a feel for your chosen channel. 
+%     \item [b] Channel: Choose the channel to Threshold on. For brightfield images I most commonly use Averaged Channels, though the stain vectors can also be useful here. Averaged channels is a measure for overall stain intensity in that it will be low where there is a lot of staining, and high where there is background. It only matters a little bit what the stain actually is, some stains like DAB absorb/scatter in all three channels and therefor will appear darker in averaged channels.The key to the channel value is that the Red, Green, Blue, Averaged, Min, and Max channels are all on a 0-255 scale with 0 being black and 255 being white/background. The color deconvolved channels are in the opposite direction, with 0 being white/background, and higher values (say around 3+) being closer to black. For tissue detection, this means using one of the first set of channels will require setting a class for the Below threshold class, as that will be the darker part of the image. Conversely, for the color deconvolved channels like Hematoxylin, Residual, or DAB/Eosin, the Above threshold line will be used. 
+    
+%     Low res is good enough for tissue detection. choose a threshold value between the background and foreground; \soln \menu{Prefilter} \solnend and \soln \menu{Smoothing Sigma} \solnend. Use \soln \menu{C} \solnend to toggle annotations on and off to check. Select the region to apply. Name the classifier and save it. \soln \menu{Classify > Pixel Classification > Load Classifier} \solnend, \soln \menu{Create Object} \solnend window pop up where we can be further adjusted with \soln \menu{Min Area} \solnend and \soln \menu{Max Fill Area} \solnend.
+%     \end{enumerate}
+% \end{itemize}
+
 
 \subsection{GUI Export Options}
-\begin{enumerate}
-    \item[2.3.1] \soln \menu{File >Export Snapshot} \solnend: %“Main window screenshot” is the entire QuPath window along with whatever sub menus or dialogs might be open in front of it, while “ Main window content” only includes the full QuPath interface without any other dialog boxes. 
-    The “Current viewer content” content includes the full image overlay including the scale bar and other Viewer components, while the “Current viewer content (SVG)” only includes objects and the original image.
-    \item[2.3.2] \soln \menu{File > Export Images} \solnend: 
+\begin{itemize}
+    \item \menu{File >Export snapshot} The “Current viewer content” content includes the full image overlay including the scale bar and other Viewer components, while the ``Current viewer content (SVG)'' only includes objects and the original image.
+    \item \menu{File > Export images}: 
     \begin{itemize}
-        \item Original pixels: Output the image in a variety of formats. Often not possible without downsampling if you are using whole slide images.
-        \item Rendered RGB (with overlays): The original image plus the overlay as it is currently visible. If you change the overlay (like turning detection visibility off) the resulting image will reflect your changes.
-        \item OME TIFF: Restricted to one file type, unlike the first option, but now you can create pyramidal images, which allows you to export whole slide images. This option can take some time. Also, even with compression, there will often be a dramatic increase in file size if the original image was JPEG compressed. Most standard whole slide formats like NDPI and SVS incorporate JPEG compression. 
-        \item Rendered SVG: SVG is a particular format that does a good job of showing polygons and lines through a variety of different magnifications as it records the points (vector based) rather than recording pixels. An exported SVG image will only have the overlay (objects), not the background image.
+        %\item Original pixels: Output the image in a variety of formats. %Often not possible without downsampling if you are using whole slide images.
+        \item Rendered RGB (with overlays): The original image plus the overlay as it is currently visible. %If you change the overlay (like turning detection visibility off) the resulting image will reflect your changes.
+        \item OME TIFF: Restricted to one file type but allows you to export whole slide images. %This option can take some time. Also, even with compression, there will often be a dramatic increase in file size if the original image was JPEG compressed. Most standard whole slide formats like NDPI and SVS incorporate JPEG compression. 
+        \item Rendered SVG: %SVG is a particular format that does a good job of showing polygons and lines through a variety of different magnifications as it records the points (vector based) rather than recording pixels. 
+        An exported SVG image will only have the overlay (objects), not the background image.
     \end{itemize}
-    \item[2.3.3] \soln \menu{Measure > Export measurement} \solnend; Export measurements dialog: Selected images on the right will be exported, images on the left will not be. Output file: Name your output file, you do not need an extension here. Export type: Here you choose whether you want individual cell measurement lists, summary information in the Annotations, or the Image information (which can be seen in the Annotations tab when no annotations are selected). Separator: I have always found CSV to be the most useful here because, at least in American English versions, Excel does terrible things by default with TSV files. It can be fixed in the settings, but I generally prefer to advise things that will work quickly for most people. Columns to include: Here you can choose to only export certain columns. If you are digging into this repeatedly, that is when it becomes worth your time to edit a script to handle this all for you. Click Populate first, and then you can right click on the drop down to either select all or none, or go through and select specifically what you want. Export should ask you to choose a location for your file, and then you get your data!
-    \item[2.3.4] \soln \menu{File > Object Data > export as GeoJSON} \solnend (pretty JSON; all objects).
-    \item[2.3.5]
-   https://www.imagescientist.com/scripting-export-images#gui
-\end{enumerate}
+    \item \menu{Measure > Export measurement}  %Export measurements dialog: Selected images on the right will be exported, images on the left will not be. Output file: Name your output file, you do not need an extension here. 
+    Export type: Here you choose whether you want individual cell measurement lists, summary information in the Annotations, or the Image information. Separator: CSV usually works. Columns to include: Click Populate first, and then you can right click on the drop down to either select all or none, or go through and select specifically what you want.
+    \item  \menu{File > Object Data > export as GeoJSON}  for possible further downstream analysis with other software.
+    \item  Tips and tricks docs https://github.com/qupath/qupath/wiki/Tips-and-tricks
+    %\item[2.3.5]
+    %https://www.imagescientist.com/scripting-export-images#gui
+\end{itemize}
 
+\newpage
 \section{Bright-field Image Analysis}
-\subsection{Objective}
-Quantify the percentage of tumor cells that are positive for Ki67. 
+\subsection{Problem}
 
-\noindent Example image: This is a cropped image of a mouse lung that was immunoperoxidase stained for Ki67, a marker of cell replication that should be localized to the nucleus. Nuclei are stained with hematoxylin (blue) and Ki67 is marked with DAB (brown). Credit: Biorepository and Tissue Technology Shared Resources, Moores Cancer Center, UC San Diego.
+We want to quantify the percentage of tumor cells that are positive for Ki67 for multiple images.
 
-\subsection{Steps}
+\paragraph{Example images:} 
+This is a cropped image of a mouse lung that was immunoperoxidase stained for Ki67, a marker of cell replication that should be localized to the nucleus.  Nuclei are stained with hematoxylin (blue) and Ki67 is marked with DAB (brown). 
+% TODO: what is the difference between immunoperoxidase and DAB?
+
+\paragraph{Credit:} Biorepository and Tissue Technology Shared Resources, Moores Cancer Center, UC San Diego.
+
+\paragraph{Concepts:} project, vector stain, positive cell detection, measurements, workflows
+
+\subsection{Step by step instructions}
+\subsubsection{Creating a project}
+
 \begin{enumerate}
-    \item \textbf{Import the Image:} Create a new project in QuPath. Add Ki67-Lung.czi to the project. Check the relevant images properties, e.g. adjust brightness and contrast.
-    \item \textbf{Set Stain Vectors:} Most brightfield images are three images in one, Red, Green and Blue all dropped on top of each other and presented to you on your screen via tiny Red Green and Blue lights. But these colors are usually not what we are interested in, unlike in fluorescence. There are no pure color channels in brightfield. Trying to analyze an image, though, we are interested in stains, not the original RGB values. Color deconvoution gives us a way to ESTIMATE the amount of stain in a given pixel.     \begin{itemize}
-    \item Do it separately for different channels by double clicking the stains in the image tab; click on \soln \menu{Brightness / Contrast} \solnend to turn on normalized OD colors, which displays image with the intensity of stains removed. This is a more characteristic representation that makes it's easier to find the ROIs.
-    \item Use \soln \menu{Analyze > Preprocessing > Estimate Stain Vectors} \solnend, as it gives the most control over the stain vectors. Create a ROI with a bit of all the stains and background, rather small one? \soln \menu{Yes} \solnend to Modal RGB; QuPath takes the most frequent RGB occurring values and uses them to estimate the background. As long as enough blank space was included in the selected area, QuPath should do a fairly good job of estimating the background color intensity. As stated in the question, it takes the mode, or most common pixel value. Another way to think about this, is QuPath is determining the amount of light that is blocked by the slide and mounting media itself. Here I usually select “Yes”, provided I am convinced the background values are correct (mouse over empty areas of the image and look at the R G and B values in the lower right corner of the Viewer).
-    \item Next, you are presented with the \soln \menu{Visual Stain Editor}\solnend, which is a set of 2D representations of the 3D color space volume. 
-    %I have placed an image of it side by side with the Color Inspector 3D plugin from Fiji, showing the 3D color space. QuPath’s three charts are each a view from one side of the cube.
-    The “after adjustments” image below shows what I obtained after first clicking Auto, which usually does a fairly good job, and then adjusting things slightly more to catch more of the “outside” pixels. In well mixed stains like Hematoxylin and Eosin (dyes where most pixels will have at least a little bit of both stains), I have often found that moving my color vectors a bit farther away from each other improves my separation. How would you check? Well, qualitatively, you can use the 2 and 3 keys to look at the Hematoxylin and Eosin channels (or the Brightness and Contrast dialog).
-    We want the dots in each figure falls in between the two lines; we can drag and move the lines or we can adjust by using clicking auto and change parameters there. Save under a different name.
-    \end{itemize}   
-
-    \item \textbf{Find Ki67 positive cells:}    \begin{itemize}
-    \item Using some of the tools introduced in Annotating images, create an annotation around a region containing tumor cells that should be detected and counted. (Avoid drawing a very large region! It is better to start small, especially when optimizing detection parameters, to avoid long delays while the detection is being applied.)
-    \item Run the command \soln \menu{Analyze > Cell detection > Positive cell detection} \solnend. This will bring up a window that allows you to determine the parameters for finding the nuclei, expanding the nuclei outlines to determine the full cells, and then labeling the cells as positive or negative for DAB. The default values are often good enough to get started. Press \soln \menu{Run} \solnend to have it detect and label cells in the rectangle region. If this takes too long to process, make your rectangle smaller. Then, adjust the parameters to improve the detection accuracy\soln \menu{F} \solnend to fill or \soln \menu{H} \solnend for hide to check the output. Double click on one cell in \soln \menu{Annotation} \solnend (while the ROI is selected) to see the measurements of the cell.
-    \item Then, adjust the parameters to improve the detection accuracy. (a)	Choose detection image:  Nuclei can be detected on the hematoxylin stain (typical) or the sum of all channels (unusual, but useful in some cases) (b) Requested pixel size: the precision of the outlines, defines the resolution QuPath will run its detection on; comparing with the original pixel size (some down-sampling factor); Larger numbers → faster, less accurate processing. (c) Background radius: size of the filter it uses for subtracting background from the chosen detection image. Should be a little bigger than your biggest nucleus. Associated with the Max background intensity in brightfield images for cell removal in tissue folder, in fluorescence images this value simply acts as an attempted detection of background levels for making the nuclei easier for the algorithm to detect. I often set this to 0 for IF so that I can estimate the Threshold value based on the intensity of the pixels in the image. If you keep a background radius, you will need to experiment more with a good Threshold setting, but the results may be better if you do have a high background. The initial background calculation is from looking for every pixel in the image in a circle of a radius defined and looks for the lowest value pixel which might potentially be the background. —> needs to be bigger than the nuclei or cluster of nuclei — or just set to 0 and play with threshold. (d) Use opening by reconstruction: usually the detections are more accurate with this option on, consider turning it off when you have varied background, folds, etc. (e) Median filter radius: applies a median smoothing filter with the chosen radius before nucleus detection. 0 = no filter applied. Increase the Median filter sigma helps to get rid of some of the fragmentation (non—related comments; compare to Gaussian, median is less prone to outliers). (f) Sigma: applies a Gaussian smoothing filter with the chosen radius before nucleus detection. 0 = no filter applied. (g) Minimum and Maximum area: the smallest and largest objects that can be nuclei. Objects outside this range are discarded. (h) Threshold: The nucleus detection threshold after all background removal and smoothing filters are applied. Lower → more things detected. (i) Maximum background intensity: Any regions with a calculated background higher than this threshold are likely noise/artifacts/problematic and will be discarded entirely. (j) Split by shape: Check in almost all cases. Separates nuclei that are relatively round. (k) Exclude DAB (membrane staining): Check if you know that your DAB staining is necessarily on the cell membrane and therefore anywhere that is DAB+ cannot be a nucleus. In this example, Ki67 is found in the nucleus, so do not check this. (l) Cell expansion: All of the nuclei outlines will be expanded outward this distance to define the cell boundaries. They will stop when they run into another cell. (m) Include cell nucleus:  Keep this checked. It will delete the nuclei if you uncheck it. (n) Smooth boundaries: Keep this checked most of the time. It improves results while minimally affecting processing time. (o) Make measurements: Useful if you are going to do any further processing on the cells after detection. Slightly increases processing time and file size, but it’s almost always worth doing. (p) Score compartment: Tell it where in the cell you are expecting the DAB signal (only nucleus, only cytoplasm, or both), and if it should look at average or max intensity. (q) Thresholds: Set the thresholds to determine 1+, 2+, 3+ cells (i.e, divide cells into negative, dim, medium, and bright). These are essential to calculating H-score. Spend some time assigning sensible thresholds for your data. (r) Single threshold: With this checked, it will only use the 1+ threshold, and will only tell you positive vs negative. No H-score will be calculated. Keep it unchecked for this exercise.
-    \item QuPath uses to distinguish between different cell types depends upon which measurements have been made. One way to view the measurements is by generating a results table. However, another way to visualize cell measurements is by using the Measure ‣ Show measurement maps command.
-    \item After you are satisfied with the positive cell detection parameters, you can delete the rectangle and the descendent cells. Draw a new box elsewhere in the image and double-check that the optimized parameters are still sufficiently accurate.
-    \item Annotate your entire tissue. If you are working with a cropped portion of a slide (as in this example), use \soln \menu{Objects > Annotations > Create full image annotation} \solnend. If you are working with a whole slide, use manual annotation, pixel threshold tool, or pixel classifier to find the outlines. 
-    \item Go to the \soln \menu{Workflow} \solnend tab, and find the last (most recent) time in the command history you ran “Positive cell detection”. Double-clicking that will open up the Positive cell detection box, with all of the parameters you set the last time you ran it. Hit \soln \menu{Run} \solnend and it will detect cells in the entire image with the last settings. If you do not have the annotation selected, it will confirm that you want to process the annotation. This may take a few minutes. 
-    \end{itemize}   
-    
-    \item \textbf{Batch processing:} Under the \soln \menu{Workflow} \solnend tab, right click and copy the pixel classifier operation; then open a script (new script and name it) and paste the copied the operation (the last two numbers in the brackets are the parameters for filling holes or filter small objects); Press \soln \menu{Run > Run for project} \solnend in the \soln \menu{Script Editor} \solnend and select all the images you want to run for, which will add all the images or we can select the ones by clicking them, then click then ok. Good idea to fill the annotation for better seeing them. Look at your workflow tab and try to recognize the major steps in your analysis: setting your image type (H-DAB), setting up stain deconvolution, many rounds of positive cell detection as you were trying things out, creating full image annotation, and your final cell detection step. Click on \soln \menu{Create script} \solnend button and delete the intermediate steps that were not productive. You should end up with some lines of code. Save your script \soln \menu{File > Save as} \solnend in the Script Editor window. QuPath will create a directory for scripts in your project, and save your work there. Keep your script editor window open.
-    \item Go to Script Editor and select \soln \menu{Run > Run for project } \solnend. If everything worked as planned you just perfectly replicated your workflow using scripting. \item Delete all; run the script, nothing happens. We need annotation to select a region, then it runs; add annotation selected; select objects by class before the cell detection line; script goes: selectAnnotations(); 
-    %\item https://www.youtube.com/watch?v=kGvZRBEeqI0
-    %\item add area measurement
-    %\item \textbf{Analysis:} Export quantitative data (e.g., cell density)
+\item Create a new project in QuPath by opening an empty folder.
+\item Add all the ``Ki67-Lung.czi'' images (1-4 images) into the project using ``Add images'' from the tab ``project'' in the ``Analysis pane'' (\keys{\shift+A}).
+\item Open each image by double clicking on the images and set the image type to ``Brightfield H-DAB''.
+\item Check the image type in the ``Image'' tab of the ``Analysis pane'' (\keys{\shift+A}), double click on the image type line to edit the type to . 
+% TODO: by default my image opened as fluorescence... 
+% TODO \item Check the relevant images properties, e.g. adjust brightness and contrast.
+\item  Adjust the brightness and contrast \menu{View>Brightness/Contrast} (\keys{\shift+C})
+ % TODO original test was: Do it separately for different channels by double clicking the stains in the image tab; click on \soln \menu{Brightness / Contrast} 
+ %    \solnend to turn on normalized OD colors, which displays image with the intensity of stains removed. This is a more characteristic representation that makes it's easier to find the ROIs.
 \end{enumerate}
 
-\section{Multiplexed Fluorescence Image Analysis}
-\subsection{Objective}
-Determine the spatial relationship between macrophages (CD68 positive) to PD-L1 expression regions.
-
-\subsection{Steps}
+\subsubsection{Setting the stain vectors}
 \begin{enumerate}
-    \item \textbf{Setting up the project:} Auto set the marker name in QuPath: \soln \menu{Set ChannelNames > Auto Set the Marker Name in QuPath} \solnend save in the same folder and then click and drag to QuPath. This is optional. The channel names can be changed manually by double clicking.
-    \item \textbf{Define the tumor region with CK}. Use threshold or object classification to segment the CK positive tumor area. Label the tumor annotation as “Tumor Region” for later spatial analysis.
-    \item \textbf{Cell detection on DAPI: on notion} Optimize individual fluorescence channels. Train a machine learning classifier for cell types.
-    \begin{itemize}
-        \item Annotate an area in which we can detect cells. \soln \menu{Analyze > Cell Detection} \solnend. Find a good threshold; check the image to get the right info. Detect the nuclei and the cells are detected by expansion.
-        \item For all cells, \soln \menu{Show Detection Measurements}\solnend, we can sort the cell by clicking the title of each column, high to low for instance; double click to locate the cells in the image.
-    \end{itemize}
-    
-    \item \textbf{Find CD68 positive cells} 
-    \begin{itemize}
-    \item Under \soln \menu{Annotation}\solnend, \soln \menu{Populate from the Existing Objects > All Classes}\solnend; click on the 3 dots icon on the bottom right. Do not keep the existing ones if no need).
-    \item Create classifiers for CD68 positive cells, macrophages. Under \soln \menu{Classify > Object Classification > Create Single Measurement Classifier}\solnend; choose Channel filter and measurement base and select \soln \menu{Above Threshold for Fluorescent Images}\solnend; use \soln \menu{Live Preview} \solnend to access the threshold parameters; play with the threshold and save the good settings. 
-    \item Change to the channel to be used for classification in \soln \menu{Brightness / Contrast}\solnend. Load the correct classifier (ctrl click); double click the name of the class to change the color of the outline for better visualization.
-    \item Inspect the classification: use miniviews to show the channel viewer; Click to check the results, double class and double pos, for instance.\soln \menu{Detection Measurement Table} \solnend tab.
-    \end{itemize} 
-    \item \textbf{Resolve Hierarchy:} find how many macrophages in the tumor region; \soln \menu{Hierarchy > Annotation Measurement}\solnend. 
+\item Create an annotation with a bit of all the stains and background.
+\item Open \menu{Analyze  > Estimate Stain Vectors} and select ``Yes'' to the question ``Modal RGB values do not match current background values - do you want to use the modal values?'' This will let QuPath use the most frequent RGB occurring values to estimate the background. 
+\item A set of 2D point clouds represents the 3D color space volume.
+\item Press the \menu{Auto} button at the bottom of the window to start a rough automatic adjustment.
+\item Then adjust the lines so that point clouds in each figure fall approximatively in between the lines.
+\item Press \menu{OK} and save the estimated stain vector under a different name.
+\item Check the stain vector estimation by cycling through the stains in the ``brightness and contrast'' tool. The hematoxilin stain should ideally contain only the nuclear stain for example.
+\end{enumerate}
 
-    \item \textbf{Find regions with PD-L1 expression} 
+\subsubsection{Detection of Ki67 positive cells} \label{sss:positive-cell-detection}
+\begin{enumerate}
+\item Create an annotation around a region containing a mix of tumor cells and normal cells. 
+% TODO: normal cells?
+\item Run the command \menu{Analyze > Cell detection > Positive cell detection}, set the parameters and press "Run" (see \ref{tab:pos-cell-detection}) for the parameters.
+\item Select the main window and press the key \keys{D} to hide and show the ``detection'' and the key \keys{F} to change the detected cells from filled regions to contours.
+\item Adjust the parameters until you are satisfied with the result\endnote{A working parameter for positive detection in Section~\ref{sss:positive-cell-detection} is sigma: 1}.
+\item To check if the detection is robust, keep the ``positive cell detection'' window open and draw another annotation, press ``Run'' and verify the result. 
+\item Delete all annotations using \menu{Objects>Delete all objects} to remove all objects. Alternatively, select the annotation in the \menu{Annotations} tab, press \menu{Delete} answer ``Yes'' to the question ``Delete selected objects'' and ``No'' to the question ``Keep descendant objects?''.
+\item Annotate the entire image using \menu{Objects > Annotations > Create full image annotation} or \keys{\ctrl+\shift+A}.
+\item Finally, press ``Run'' in the ``Positive cell detection'' window to detect cells in the whole tissue.
+\item Select \menu{Measure>Show annotations measurement} to get the ratio of positives cells.
+\end{enumerate}
+
+% TODO: How to identify a tumor cell?
+% This will bring up a window that allows you to determine the parameters for finding the nuclei, expanding the nuclei outlines to determine the full cells, and then labeling the cells as positive or negative for DAB. The default values are often good enough to get started. Press \soln \menu{Run} \solnend to have it detect and label cells in the rectangle region. If this takes too long to process, make your rectangle smaller. Then, adjust the parameters to improve the detection accuracy\soln \menu{F} \solnend to fill or \soln \menu{H} \solnend for hide to check the output. Double click on one cell in \menu{Annotation} (while the ROI is selected) to see the measurements of the cell.
+% % TODO: is not in the \menu{Hierarchy} tab? 
+% \item Then, adjust the parameters to improve the detection accuracy. 
+
+
+% \item Go to the \soln \menu{Workflow} \solnend tab, and find the last (most recent) time in the command history with \soln \menu{Positive cell detection}\solnend. Double-click and hit \soln \menu{Run} \solnend and it will detect cells in the entire image with the last settings. 
+% \end{enumerate}   
+
+\subsubsection{Process all images using workflows}
+\begin{enumerate}
+\item At the top of the ``Analysis panel'' select the ``Workflow'' tab and select ``Create workflow'' at the bottom of the panel.
+\item Discard the unnecessary steps (right click and ``Remove select items'')  to keep only the following steps:
+\begin{itemize}
+\item Set image type
+\item Set color deconvolution stains
+\item Create full image annotation
+\item Positive cell detection
+\end{itemize}
+\item Press the button ``Create script'' to generate the corresponding groovy script.
+\item In the script editor window, save the script using \menu{File > Save as}. Files are saved in the script folder of the project. 
+\item Use \menu{Run > Run for project} to process the entire project.
+\item Finally, export the measurement from all images using \menu{Measure>Export measurements} and selecting all the images using the ``>>'' button.
+
+% \item %Under the \soln \menu{Workflow} \solnend tab, right click and copy the pixel classifier operation; then open a script (new script and name it) and paste the copied the operation (the last two numbers in the brackets are the parameters for filling holes or filter small objects); Press \soln \menu{Run > Run for project} \solnend in the \soln \menu{Script Editor} \solnend and select all the images you want to run for, which will add all the images or we can select the ones by clicking them, then click then ok. 
+% Look at the \soln \menu{Workflow} \solnend tab and try to recognize the major steps in the analysis workflow: setting the image type, setting stain deconvolution, many rounds of positive cell detection to optimize parameters, creating the full annotation of the image, and your final cell detection step. Click on \soln \menu{Create script} \solnend button and delete the intermediate steps that were not productive. You should end up with some lines of code. Save your script \soln \menu{File > Save as} \solnend in the Script Editor window. QuPath will create a directory for scripts in your project, and save your work there. Keep your script editor window open.
+% \item Go to Script Editor and select \soln \menu{Run > Run for project }\solnend. If everything worked as planned, you just perfectly replicated your workflow using scripting.
+%\item Delete all; run the script, nothing happens. We need annotation to select a region, then it runs; add annotation selected; select objects by class before the cell detection line; script goes: selectAnnotations(); 
+%\item https://www.youtube.com/watch?v=kGvZRBEeqI0
+%\item add area measurement
+%\item \textbf{Analysis:} Export quantitative data (e.g., cell density)
+\end{enumerate}
+
+%\subsubsection{Using InstanSeg}
+%Here we present an alternative approach to the step \ref{sss:positive-cell-detection} using the InstanSeg pretrained neural network.
+%\begin{enumerate}
+    %\item \menu{Extensions>InstanSeg>Run InstanSeg}.
+    %\item Set the ``Input channels'' by ticking all 3 ``Red'', ``Blue'' and ``Green'' channels.
+    %\item Select ``All annotation'' and press ``Run''.
+    %\item \menu{Classify > Create single measurement classifier } to create a classifier for positive KI67 cells using the DAB channel.
+%\end{enumerate}
+
+\section{Multiplexed fluorescence image analysis}
+
+\subsection{Problem}
+
+In this example, we want to understand the spatial relationship between FoxP3 positive regulatory T (Treg) cells and CD68 positive macrophages with the PD-L1 marker in the lung tumor micro-environment in the context of a study on immune suppression.
+
+PD-L1 is a membrane-associated protein, meaning its expression pattern is often patchy or diffuse, rather than confined to round cells. CD68 and FoxP3 are intracellular: FoxP3 (Forkhead box P3) is a transcription factor primarily expressed in regulatory T cells and is localized in the nucleus. The lysosomal and endosomal membrane protein CD68 is a macrophage panmarker and primarily localizes in intracellular vesicles. 
+
+%High FoxP3+ Tregs in tumors → Suggests an immunosuppressive TME, possibly making the tumor more resistant to checkpoint inhibitors.
+%FoxP3+ Tregs near CD68+ macrophages → Could indicate cooperative immune suppression, reinforcing the need for combination therapies (e.g., anti-PD-1 + Treg depletion strategies).
+%FoxP3+ Tregs near PD-L1+ tumor regions → Suggests Tregs may be helping maintain PD-L1-mediated T cell exhaustion.
+
+To do so, we will detect cells using the DAPI channel. Next, we use an object classification to segment the Treg cells (FoxP3 positive cells) and macrophages (CD68 positive cells).  We will use a pixel classifier to localize the expression of PD-L1 and finally inspect the proximty of macrophages and Treg with the PD-L1 marker using a spatial analysis. 
+
+% TODO: Check the image name
+\paragraph{Example image:}
+Lung Cancer (LuCa) sample prepared with the Opal Polaris 7 Color IHC Detection Kits and image with the Perkin Elmer’s Vectra Polaris system.
+
+% \directory{LuCa-7color\_[13860,52919]\_1x1component\_data.tif}
+
+\paragraph{Credit:} Perkin Elmer
+
+\paragraph{Concepts:} Cell detection, object classification, pixel classification, spatial analysis
+% TODO check concepts
+
+\subsection{Steps by step instructions}
+\subsubsection{Setting up the project}
+ Let's start by creating a project and importing the image. As in multiplex imaging each channel corresponds to a labeled protein of interest, we want to make sure they are correct. Finally, we also choose here to define a set of classes for each label.
+
+\begin{enumerate}
+\item Create a project using \menu{File>Project...>Create project} and select an empty folder.
+\item To add the image click on \menu{Add images} in the ``Project'' tab of the ``Analysis pane''. Press \menu{Choose files} and select the file.
+\item Still in the ``project'' tab, double click on the image to open it, and set the image type to fluorescence, select ``Apply''.
+\item To define the channel names (and remove the Opal ***), we have 3 options (use only one of them):
+\begin{itemize}
+    \item Open the ``Brightness \& contrast'' window and double click on each channel to edit the name
+    \item Open a text editor and list the channel name per line, copy \keys{\ctrl+C}.  In QuPath, open the ``Brightness \& contrast'' window, select all the channels (\keys{\ctrl+A}) and paste \keys{\ctrl+V}.
+    \item Open the script editor \keys{\ctrl+[} and type:
+    \begin{lstlisting}[language=java]
+setChannelNames('PDL1','CD8','FoxP3','CD68','PD1','CK');
+    \end{lstlisting}
+\end{itemize}
+\item To define annotation classes with the same name as the channels, select the ``Annotations'' tab, and under the classifications list on the right,  press the $\vdots$ icon and select \menu{Populate from image channels}.
+\end{enumerate}
+
+% \subsubsection{Channels}
+% Channel names are particularly important for multiplexed analysis, as they typically correspond to the markers of interest.
+% \begin{enumerate}
+%     \item The names can be seen in the \menu{Brightness/Contrast} dialog, and edited by double-clicking on any entry to change the channel properties. Here, I would remove any ‘(Opal)’ parts.
+%     \item Setting all the channel names individually can be very laborious. Two tricks can help.
+%     \begin{itemize}
+%     \item Outside QuPath (or in the Script editor) create a list of the channel names you want, with a separate line for each name. Copy this list to the clipboard, and then select the corresponding channels in the \menu{Brightness/Contrast} dialog and press \keys{\ctrl + V} to paste them.
+%     %\item If the channels names are not already matching the markers, use Auto-set the marker name in QuPath: \menu{Set ChannelNames > Auto Set the Marker Name in QuPath}. Save in the same folder and then click and drag to QuPath. 
+%     \item Run a script like the following: 
+    
+%     setChannelNames(
+%      'PDL1',
+%      'CD8',
+%      'FoxP3',
+%      'CD68',
+%      'PD1',
+%      'CK'
+% )
+%     \end{enumerate}
+%     % TODO I didn't find a menu "\menu{Set ChannelNames > Auto Set the Marker Name in QuPath}"
+    
+%     %\item \textbf{Define the tumor region with CK}. Use threshold or object classification to segment the CK positive tumor area. Label the tumor annotation as “Tumor Region” for later spatial analysis.
+%     \end{itemize}
+% \subsubsection{Defining classes}
+% We now want to make the channel names available as classes.
+
+% \begin{enumerate}
+% %\item Under \menu{Annotation}, \menu{Populate from the Existing Objects > All Classes}; click on the 3 dots icon on the bottom right. (Do not keep the existing ones).
+% % TODO this step assumes that one class is selected. Bottom right of the class panel. I got confused by the 3 dots of the annotation panel!!! Took me 5 minutes.
+% % TODO why do we need to do this step if we are going to use the single measurement classifier anyway?
+% \item The currently available classes are shown under the \menu{Annotations} tab. You can either right-click this list or select the 3 dots button and choose \menu{Populate from image channels} to quickly set these.
+% \end{enumerate}
+
+ \subsubsection{Cell detection} \label{sss:cell-detection}
+ We start with detecting cells with the "cell detection" tool using the DAPI channel. We first tune the parameters on a small part of the image, and then process the whole image. 
+\begin{enumerate}
+    \item Create a small annotation to test the cell detection settings:
     \begin{itemize}
-        \item \soln \menu{Classify > Pixel Classification > Create Thresholder} \solnend or \soln \menu{Train a Pixel Classifier}\solnend
-        \item \soln \menu{Create Thresholder} \solnend window. Resolution: As long as your image has pixel size metadata, these values will start with Full for the base resolution to 64X downsample for Very Low. Lower resolutions will run faster and can be useful for getting a feel for your chosen channel. Channel: Choose the channel to Threshold on. For brightfield images I most commonly use Averaged Channels, though the stain vectors can also be useful here. Averaged channels is a measure for overall stain intensity in that it will be low where there is a lot of staining, and high where there is background. It only matters a little bit what the stain actually is, some stains like DAB absorb/scatter in all three channels and therefor will appear darker in averaged channels.The key to the channel value is that the Red, Green, Blue, Averaged, Min, and Max channels are all on a 0-255 scale with 0 being black and 255 being white/background. The color deconvolved channels are in the opposite direction, with 0 being white/background, and higher values (say around 3+) being closer to black. For tissue detection, this means using one of the first set of channels will require setting a class for the Below threshold class, as that will be the darker part of the image. Conversely, for the color deconvolved channels like Hematoxylin, Residual, or DAB/Eosin, the Above threshold line will be used. Low res is good enough for tissue detection. choose a threshold value between the background and foreground; \soln \menu{Prefilter} \solnend and \soln \menu{Smoothing Sigma} \solnend. Use \soln \menu{C} \solnend to toggle annotations on and off to check. Select the region to apply. Name the classifier and save it. \soln \menu{Classify > Pixel Classification > Load Classifier} \solnend, \soln \menu{Create Object} \solnend window pop up where we can be further adjusted with \soln \menu{Min Area} \solnend and \soln \menu{Max Fill Area} \solnend.
-        \item Add new classes under the \soln \menu{Annotation} \solnend tab. Double click the square to change colours of the class for better visualization; select each class and use \soln \menu{Brush} \solnend to annotate a few corresponding areas. \soln \menu{Classify > Pixel Classification > Train a Pixel Classifier} \solnend. Choose a proper classifier; Select the proper resolution for objects of interest. For example, for tissue detection, high res (downsample 4) is good. 
-        \item \soln \menu{Features > Edit} \solnend: define and click show then we can look at what different features are doing to the images to the selected channel; \soln \menu{Features > Edit > Scale}\solnend. We can add different res; more uniform regions with low res.
-        \item In \soln \menu{Live Prediction} \solnend, we can modify the parameters chosen and the software will update on the fly; (the bar in the tool bar, we can change the opacity)
-        \item Modify the annotation area to make the different classes balanced in the pi chart, click big C (on or off with the masks) in the tool bar to see for all the images.
-        \item Save the classifier; go back to the project and load pixel classifier (Crtl+L), choosing our saved model and apply everywhere \soln \menu{Create Objects} \solnend  for all annotation or full image; get rid of small objects and fill holes, using shift +f to fill the annotation for better check. If there is area in the annotation needed to be removed, first unlock it in the \soln \menu{Annotation} \solnend tab, select \soln \menu{Brush} \solnend which res adjusted. With alt we can remove the unwanted region.
-        \end{itemize}
+        \item Open \menu{Analyze>Cell detection>Cell detection} and adjust the parameters 
+        \item For adjusting the threshold, a good practice is to open the ``Brightness \& contrast'' tool, select the DAPI channel and adjust the ``Channel max'' slider or hover on the pixel and inspect the intensity value displayed in the bottom right corner of the image.
+        \item For adjusting the cell detection area parameters or other shape parameters, we can, for instance, inspect the area of the detected objects under the tab \menu{Hierarchy}, expanding the detection drop down menu of the current annotation. QuPath has computed a variety of properties of each cell for all the different channels you can use them to check the corresponding values and refine the cell detection parameters\endnote{For the cell detection parameter in Section \ref{sss:cell-detection}, we use a threshold at 1.5.}.
+    \end{itemize}      
+    \item Discard the current annotation (\menu{Objects>Delete...>Delete all objects}), create a whole image annotation (\keys{\ctrl+\shift+A}) and apply the cell detection to the whole image.
+    \item Inspect the measurements for each cell using  \menu{Measure > Show detection measurements}.
+    
+    % Annotate an area in which we can detect cells. (new version: Create an annotation around a region containing cells that should be detected and counted. You need to select an area before you can run cell detection. Avoid drawing a very large region! It is better to start small, especially when optimizing detection parameters, to avoid long delays while the detection is being applied.)
+    % % TODO: this is confusing, when reading this it seems we annotate the region with cell detection.
+    % \menu{Analyze > Cell Detection}. Find a good threshold (hint: 1.5 while everything else kept as default values; hover over on both the nucleus region and background to check the intensity while DAPI channel is selected); 
+    % % TODO: default values do not work, because QuPath seems to remember previous settings.
+    % % TODO: provide all the values as a solution
+    % Detect the nuclei and the cells are detected by expansion.
+    % \item Under \menu{Hierarchy} tab, select the working annotation and click on the drop down menu. All the cells detected are listed there and QuPath has computed a variety of properties of each cell for all the different channels. For example, area which can be used to refine the cell detection parameters.
+    % \item Along with the cell detection, QuPath automatically measures all channels in different cell compartments.
+    % % TODO: "for all cells" does this means that we need to select the cells? --changed it. how about now?
+    % \menu{Measure > Show Detection Measurements}, we can sort the cell by clicking the title of each column, high to low for instance; double click to locate the cells in the image.
+    
+\end{enumerate}
+
+\subsubsection{Identification of Treg cells and macrophages}
+We want now to classify cells into Treg cells and macrophages using respectively the FoxP3 and CD68 channels. Remember that the FoxP3 is nuclear while the CD68 is a transmembrane protein associated to endosomal/lysosomal compartment. 
+
+\begin{enumerate}
+\item Open \menu{Classify > Object classification > Create single measurement classifier}.
+\item Set ``Object filter'' to ``Detetion (all)'' and the ``Channel filter'' to FoxP3.
+\item Use \menu{Live Preview} to adjust the threshold parameters. Use the ``Brightness \& contrast'' window to select the channels to better identify positive cells.
+\item Press \menu{Save} to save the classifier.
+\item Similarly, create a classifier for the CD68 positive macrophages.
+\item Closer the ``Single measurement classifier'' window by pressing ``Cancel''.
+\item To apply both classifiers, load the object classifiers using \menu{Classify > Load object classifier}, select multiples classifiers using the \keys{\shift} or \keys{\ctrl} keys and press \menu{Apply classifiers sequentially}.
+\item If necessary, double click the name of the class under the \menu{Annotation} tab to change color of the outline for better visualization.
+\item Use \menu{View > Show channel viewer} and the ``Brightness \& contrast'' window to inspect the result. In the main window, click on a cell to select it, toggle the displaed detection by pressing the key \keys{D} and check double positive cells for instance.
+\item Alternatively, go to \menu{Measure > Show Detection Measurements} and inspect the class column.
+\item Finally, open \menu{Measure > Show Annotation Measurements} for ensemble statistics.
+\end{enumerate}
+
+ When no good single measurement threshold can be defined, there is the option to train a classifier for specific cell type using machine learning through the \menu{Classify > Object Classification > Train object classifier}.
+
+
+    %     \begin{itemize}
+    %     \item Open \menu{Classify > Object classification > Create single measurement classifier}.
+    %     \item Set "Object filter" to "Detetion (all)" and the "Channel filter" to ""
         
-    \item \textbf{Spatial Analysis:} Get the distance of each cell to the closest blood vessel;
-    \begin{itemize}
-    \item \soln \menu{Analyze > Spatial Analysis > Distance to Annotations 2D > Yes} \solnend; click on one cell \soln \menu{Last Measurement} \solnend (distance to centroid 2D also useful); or \soln \menu{Spatial Analysis > Detection Centroid Distance 2D}\solnend.
-    \item For each cell, the distance to the next cell in the other classes; (NK to FB1 and NK to FB2) (click on one NK cell (under \soln \menu{Hierarchy > Measurement} \solnend (left bottom)) (last measurements added) (note that our FB cells are taken from the first cell detection step so not really reflect the real shape of the FB cells here; try use pixel classifier  then resolve hierarchy distance to annotations 2D; this relates to my issue with segment fibroblasts)
-    \item Note: For QuPath doc, about the specific projects, the specific parameters in features like cell detection, need to use real images to determine beforehand
-    \end{itemize}
+    %     and the corresponding measurement base and select \menu{Above Threshold } for fluorescent images
+    %     \item Use \menu{Live Preview} to evaluate the threshold parameters play with the threshold 
+    %     \item Press \menu{Save} to saver the classifier.
+    %     \soln
+    %     Hint: for CD86 use cytoplasm mean intensity as measurement base while for FoxP3 use the nucleus intensity.
+    %     \solnend
+    %     \end{itemize}
+    % % TODO provide the detailed answer here 
+    % \item Similarly create a classifier for the CD68 positive macrophages
+    
+    
+    % \end{itemize} 
+    %\item \textbf{Resolve Hierarchy:} find how many macrophages in the tumor region; \soln \menu{Hierarchy > Annotation Measurement}\solnend. 
+    % \item \textbf{Inspect the classifications}
+    % \begin{itemize}
+    % \item Use \soln \menu{View > Show Channel Viewer} \solnend  to show the multichannel; click to check the results, double positive cells, for instance. 
+    % \item Alternatively, go to \soln \menu{Measure > Show Detection Measurements} \solnend and look into the class column and \soln \menu{Measure > Show Annotation Measurements} \solnend for ensemble stats.
+    % \end{itemize}
+
+\subsubsection{Pixel classification for regions with PD-L1 expression}
+
+In this section, we want to define the region of positive PD-L1 expression using a pixel classifier. The two available options are using either a simple ``thresholder'' or more advanced ``pixel classifier'' that use example annotations to train a model. The resulting annotations or detection will not be ``cells'' but simple region of interests. 
+
+\subsubsection{Using a threshold}
+We recall that a thresholder can be seen as a very simple pixel classification with only one feature.
+\begin{enumerate}
+\item To create a thresholder, open \menu{Classify > Pixel Classification > Create thresholder} (see Table~\ref{tab:thresholder} for the parameter description).
+\item Set the class above threshold to ``PDL1'' and the class below threshold to ``Unclassified''.
+\item Set the ``Channel'' to PDL1. Note that for other type of images such as brightfield, using a combination of channel such as ``Average'' might be useful.
+\item Select a resolution, prefilter, smoothing and threshold parameters. Recall that a large smoothing sigma for a Gaussian prefilter is equivalent to a lower resolution.
+\item Adjust the slider at the top of the main user interface to adjust the overlay intensity. 
+\item When satisfied, save the classifier as ``PDL1-threshold''.
+\item Then navigate to \menu{Classify>Pixel classifier>Load pixel classifier}, select the ``PDL1-thresholder'' model and set the region to ``Everywhere''. Click the button ``Create object''.
+\item In the next window, choose ``Full image'' as parent objects. 
+\item Finally, set the object type to ``Annotation'' and the minimum object size to $10\mu m$ and press ``OK''.
+% TODO:what are create object vs classify etc?
 \end{enumerate}
+
+\subsubsection{Using a machine learning approach}
+
+\begin{enumerate}
+\item Duplicate the image for training so that the annotation used for training are separated from the one for analysis.
+\item Rename the channel as before.
+\item Open \menu{Classify > Pixel classification > Train a pixel classifier}.
+\item Choose a classifier, a resolution and the edit the features. Set the ``Output'' to classification and the ``Region'' to everywhere.
+\item Enable ``Live prediction'' and start annotating the image using the polyline tool (press \keys{V}), in the ``Analysis pane'' in the ``Annotation'' tab, click on ``Auto set'' to automatically assign the next annotation to the selected class.
+\item When annotating, in the ``Pixel classifier'' window, select either the classification or the feature to display using the dropdown menu as well as the opacitiy using the slider.
+\item Save the classifier as ``PDL1-ml''.
+\item Open the original image
+\item Open \menu{Classify > Pixel classifier > Load pixel classifier}, select the model as PDL1. Then select ``Create objects'' and choose ``Full image'' as parent objects.
+\item In the ``Create object window'' select ``Annotation'' for ``New object type''. Set the minimum object size to $10\,\mu m$.
+\end{enumerate}
+
+
+
+%         \item Duplicate one image for training (not sure...).
+     
+%         \item \soln \menu{Classify > Pixel Classification > Train a Pixel Classifier}\solnend. 
+%         %(make annotation and define them as positive and negative and let QuPath does the job finding the pattern to train a classifer)
+%         \item Add new classes under the \soln \menu{Annotation} \solnend tab if needed. Double click the square to change colours of the class for better visualization; select the PD-L1 class and use \soln \menu{Polyline} \solnend to annotate a few small regions of PD-L1 while the \soln \menu{Auto set} \solnend selected. 
+        
+%         \item In \soln \menu{Live Prediction}\solnend, we can modify the parameters chosen and the software will update on the fly; lower the opacity for easier visualization.
+%         %\item Improving the classifier: You should find it quickly get some parts right, but quite a lot wrong. We can resolve some errors by adding more annotations, but this alone won’t be enough.
+
+%         %Choose a proper classifier; select the proper resolution for objects of interest. For example, for tissue detection, high resolution (downsample 4) is good.
+%         \item The pie charts in the screenshots show the relative proportion of training samples for each class. This depends upon the number of annotations with each classification, and the size of those annotations. You should usually aim to annotate your image so that you have: Small, diverse training samples and roughly the same number of training samples for each class. If you give the classifier lots of examples of pixels that look nearly the same, it will be harder to train it to identify anything else.
+%         \item Classifier: The type of the classifier. Artificial neural networks and Random trees are generally good choices. K nearest neighbor can be appropriate if you will train from point annotations only (it can become very slow with large training regions). Press Edit to have more options for each.
+%         \begin{itemize}
+%             \item Resolution: controls the level of detail for the classification (and, relatedly, processing time and memory use). The image preview in the dialog box shows the image at the resolution at which it is being classified.
+%             \item Features: Customize what information goes into the classifier (more information below).
+%             \item Output: All available classifiers can output a single classification per pixel. Some can also provide an estimated (pseudo)probability value for each available classification. This isn’t a true probability, will be rescaled to the range 0-255, and requires more memory – but can be useful in some cases to assess the confidence of the predictions.
+%             \item Region: As with the thresholder, this controls where the overlay previews the classification. It does not impact the results.
+%         \end{itemize}
+        
+%         %\item \soln \menu{Features > Edit} \solnend: define and click show then we can look at what different features are doing to the images to the selected channel; \soln \menu{Features > Edit > Scale}\solnend. We can add different resolution; more uniform regions with low resolution.
+        
+%         %\item Modify the annotation area to make the different classes balanced in the pi chart, click big C (on or off with the masks) in the tool bar to see for all the images.
+%         \item Selecting features (NEED TO BE ADDED)
+%         \item Save the classifier; go back to the project and load pixel classifier (Crtl/Cmd+L), choosing PD-L1 and apply everywhere \soln \menu{Create Objects} \solnend  for all annotation or full image; get rid of small objects and fill holes, using \menu{shift +f} to fill the annotation for better check. If there is area in the annotation needed to be removed, first unlock it in the \soln \menu{Annotation} \solnend tab, select \soln \menu{Brush} \solnend which res adjusted. With alt we can remove the unwanted region.
+%         \item Use \soln \menu{Classify > Pixel classification > Create thresholder }\solnend; choose above threshold for channel PD-L1 and optimize resolution and smoothing parameters. Click \soln \menu{Create object } \solnend for current selection. Tick split objects. %(other parameters; we can try to run it and click on the good annotation then we know the threshold for those para)
+%         \end{itemize}
+
+
+\subsubsection{Spatial analysis}
+We want to investigate the spatial relationship between Treg cells and the expression pattern of the PD-L1 protein. For this we will compute the distance of the cells to the PD-L1 annotation.
+\begin{enumerate}
+\item To create a distance measurement of each cell to the PD-L1 region, open \menu{Analyze > Spatial analysis > Distance to annotations 2D} and select ``Yes''.
+\item To check this new measurement, %An extra measurement has been added to the object as you can observe in the object properties: 
+switch to the ``Hierachy'' tab, expand the main annotation to see the list of cells, select a cell and inspect the measurement tab at the left bottom of the panel. 
+\item Distance measurements are available the measurement table: open \menu{Measure>Show detection measurements} and filter the columns using the keyword ``Distance'' to access the distances.
+\item A map of the distance of each cell to the nearest PD-L1 annotation is also available when running \menu{Measure>Show measurement map}.
+\end{enumerate}
+%     \item \textbf{Spatial Analysis:} 
+%     \begin{itemize}
+%     \item For spatial relationship between Tregs and PD-L1, \soln \menu{Analyze > Spatial Analysis > Distance to Annotations 2D > Yes} \solnend; For distance of Tregs to Macrophages (other cell classes) \soln \menu{Analyze > Spatial Analysis > Distance to Centroid 2D > Yes} \solnend. Click on one Tregs under \soln \menu{Hierarchy > Measurement} \solnend (left bottom) to check; spatial information is at the bottom of the measurement list. 
+%     \item Export the measurements an objects as needed.
+%     %\item Note: For QuPath doc, about the specific projects, the specific parameters in features like cell detection, need to use real images to determine beforehand
+%     \end{itemize}
+% \end{enumerate}
+
+
+%\subsubsection{Optional steps}
+%\begin{enumerate}
+%\item Instead of running the cell detection in \ref{sss:cell-detection}, use InstanSeg  running \menu{Classify>InstanSeg>Run InstanSeg}. 
+%\end{enumerate}
 
 \section{Additional Resources}
 \begin{itemize}
+    \item QuPath original paper: Bankhead, P. et al. (2017). QuPath: Open source software for digital pathology image analysis. Scientific Reports. https://doi.org/10.1038/s41598-017-17204-5
     \item \href{https://qupath.github.io/}{Official QuPath Documentation}.
     \item Online forums and example datasets.
 \end{itemize}
+
+\appendix
+
+
+\printendnotes
 
 \end{document}
